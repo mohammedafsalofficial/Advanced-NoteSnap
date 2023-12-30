@@ -1,17 +1,27 @@
-import React from "react";
+import React, { FormEvent, useRef } from "react";
 import { Button, Col, Form, Row, Stack } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CreateReactableSelect from "react-select/creatable";
 
 const NoteForm: React.FC = () => {
+  const titleRef = useRef<HTMLInputElement>(null);
+  const markdownRef = useRef<HTMLTextAreaElement>(null);
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
+    navigate("..");
+  };
+
   return (
-    <Form>
+    <Form onSubmit={handleSubmit}>
       <Stack gap={4}>
         <Row>
           <Col>
             <Form.Group controlId="title">
               <Form.Label>Title</Form.Label>
-              <Form.Control required />
+              <Form.Control ref={titleRef} required />
             </Form.Group>
           </Col>
           <Col>
@@ -23,7 +33,7 @@ const NoteForm: React.FC = () => {
         </Row>
         <Form.Group controlId="markdown">
           <Form.Label>Body</Form.Label>
-          <Form.Control required as="textarea" rows={15} />
+          <Form.Control ref={markdownRef} required as="textarea" rows={15} />
         </Form.Group>
         <Stack direction="horizontal" gap={2} className="justify-content-end">
           <Button type="submit" variant="primary">
