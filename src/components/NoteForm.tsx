@@ -1,8 +1,9 @@
-import React, { FormEvent, useRef } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 import { Button, Col, Form, Row, Stack } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import CreateReactableSelect from "react-select/creatable";
 import { NoteData, Tag } from "../App";
+import { v4 as uuidV4 } from "uuid";
 
 type NoteFormProps = {
   onSubmit: (data: NoteData) => void;
@@ -13,6 +14,7 @@ type NoteFormProps = {
 const NoteForm: React.FC<NoteFormProps> = ({ onSubmit, onAddTag, availableTags }) => {
   const titleRef = useRef<HTMLInputElement>(null);
   const markdownRef = useRef<HTMLTextAreaElement>(null);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const navigate = useNavigate();
 
   const handleSubmit = (e: FormEvent) => {
@@ -34,7 +36,30 @@ const NoteForm: React.FC<NoteFormProps> = ({ onSubmit, onAddTag, availableTags }
           <Col>
             <Form.Group controlId="tags">
               <Form.Label>Tags</Form.Label>
-              <CreateReactableSelect isMulti />
+              <CreateReactableSelect
+                onCreateOption={(label: string) => {
+                  const newTag: Tag = { id: uuidV4(), label };
+                  onAddTag(newTag);
+                  setSelectedTags((prevTags: Tag[]) => [...prevTags, newTag]);
+                }}
+                value={selectedTags.map((tag: Tag) => {
+                  return { label: tag.label, value: tag.id };
+                })}
+                options={availableTags.map((tag: Tag) => {
+                  return { label: tag.label, value: tag.id };
+                })}
+                onChange={(values) => {
+                  setSelectedTags(
+                    values.map((value) => {
+                      return {
+                        label: value.label,
+                        id: value.value,
+                      };
+                    })
+                  );
+                }}
+                isMulti
+              />
             </Form.Group>
           </Col>
         </Row>
