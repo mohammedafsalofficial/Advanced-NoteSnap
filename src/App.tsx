@@ -5,6 +5,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import NoteList from "./pages/NoteList";
 import NewNote from "./pages/NewNote";
 import useLocalStorage from "./hooks/useLocalStorage";
+import { v4 as uuidV4 } from "uuid";
 
 export type Tag = {
   id: string;
@@ -14,7 +15,7 @@ export type Tag = {
 export type NoteData = {
   title: string;
   markdown: string;
-  tag: Tag[];
+  tags: Tag[];
 };
 
 export type Note = {
@@ -33,13 +34,26 @@ export type RawNote = {
 
 const App: React.FC = () => {
   const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", []);
-  const [tags, setTags] = useLocalStorage<RawNote[]>("TAGS", []);
+  const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
+
+  const onCreateNote = ({ tags, ...data }: NoteData) => {
+    setNotes((prevNotes: RawNote[]) => {
+      return [...prevNotes, { ...data, id: uuidV4(), tagIds: tags.map((tag) => tag.id) }];
+    });
+  };
+
+  const addTag = (tag: Tag) => {
+    setTags((prevTags: Tag[]) => [...prevTags, tag]);
+  };
 
   return (
     <Container className="my-4">
       <Routes>
         <Route path="/" element={<NoteList />} />
-        <Route path="/new" element={<NewNote />} />
+        <Route
+          path="/new"
+          element={<NewNote onSubmit={onCreateNote} onAddTag={addTag} availableTags={tags} />}
+        />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Container>

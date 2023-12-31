@@ -2,8 +2,15 @@ import React, { FormEvent, useRef } from "react";
 import { Button, Col, Form, Row, Stack } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import CreateReactableSelect from "react-select/creatable";
+import { NoteData, Tag } from "../App";
 
-const NoteForm: React.FC = () => {
+type NoteFormProps = {
+  onSubmit: (data: NoteData) => void;
+  onAddTag: (tag: Tag) => void;
+  availableTags: Tag[];
+};
+
+const NoteForm: React.FC<NoteFormProps> = ({ onSubmit, onAddTag, availableTags }) => {
   const titleRef = useRef<HTMLInputElement>(null);
   const markdownRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
