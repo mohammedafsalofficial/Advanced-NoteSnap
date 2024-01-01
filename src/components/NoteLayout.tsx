@@ -9,7 +9,7 @@ type NoteLayoutProps = {
 const NoteLayout: React.FC<NoteLayoutProps> = ({ notes }) => {
   const { id } = useParams();
 
-  const note = notes.filter((note) => note.id === id);
+  const note = notes.find((note) => note.id === id);
 
   if (note == null) {
     return <Navigate to="/" replace />;

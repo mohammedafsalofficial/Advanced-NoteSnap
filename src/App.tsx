@@ -70,7 +70,7 @@ const App: React.FC = () => {
           element={<NewNote onSubmit={onCreateNote} onAddTag={addTag} availableTags={tags} />}
         />
         <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
-          <Route index />
+          <Route index element={<Note />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
