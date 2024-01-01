@@ -6,6 +6,8 @@ import NoteList from "./pages/NoteList";
 import NewNote from "./pages/NewNote";
 import useLocalStorage from "./hooks/useLocalStorage";
 import { v4 as uuidV4 } from "uuid";
+import NoteLayout from "./components/NoteLayout";
+import Note from "./pages/Note";
 
 export type Tag = {
   id: string;
@@ -67,6 +69,9 @@ const App: React.FC = () => {
           path="/new"
           element={<NewNote onSubmit={onCreateNote} onAddTag={addTag} availableTags={tags} />}
         />
+        <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
+          <Route index />
+        </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Container>
