@@ -1,16 +1,33 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Button, Col, Form, Row, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
 import { Tag } from "../App";
 
+type SimplifiedNote = {
+  id: string;
+  title: string;
+  tags: Tag[];
+};
+
 type NoteListProps = {
+  notes: SimplifiedNote[];
   availableTags: Tag[];
 };
 
-const NoteList: React.FC<NoteListProps> = ({ availableTags }) => {
+const NoteList: React.FC<NoteListProps> = ({ notes, availableTags }) => {
   const [title, setTitle] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+
+  const filteredNotes: SimplifiedNote[] = useMemo(() => {
+    return notes.filter((note: SimplifiedNote) => {
+      return (
+        (title === "" || note.title.toLowerCase().includes(title.toLowerCase())) &&
+        (selectedTags.length === 0 ||
+          selectedTags.every((tag) => note.tags.some((noteTag) => noteTag.id === tag.id)))
+      );
+    });
+  }, [title, selectedTags, notes]);
 
   return (
     <>
@@ -65,6 +82,9 @@ const NoteList: React.FC<NoteListProps> = ({ availableTags }) => {
           </Col>
         </Row>
       </Form>
+      <Row xs={1} sm={2} lg={3} xl={4} className="g-3">
+        {}
+      </Row>
     </>
   );
 };
