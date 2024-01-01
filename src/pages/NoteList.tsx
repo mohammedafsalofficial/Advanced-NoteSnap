@@ -2,13 +2,8 @@ import React, { useMemo, useState } from "react";
 import { Button, Col, Form, Row, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
-import { Tag } from "../App";
-
-type SimplifiedNote = {
-  id: string;
-  title: string;
-  tags: Tag[];
-};
+import { SimplifiedNote, Tag } from "../App";
+import NoteCard from "../components/NoteCard";
 
 type NoteListProps = {
   notes: SimplifiedNote[];
@@ -83,7 +78,11 @@ const NoteList: React.FC<NoteListProps> = ({ notes, availableTags }) => {
         </Row>
       </Form>
       <Row xs={1} sm={2} lg={3} xl={4} className="g-3">
-        {}
+        {filteredNotes.map((note) => (
+          <Col key={note.id}>
+            <NoteCard id={note.id} title={note.title} tags={note.tags} />
+          </Col>
+        ))}
       </Row>
     </>
   );

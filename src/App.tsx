@@ -32,6 +32,12 @@ export type RawNote = {
   id: string;
 } & RawNoteData;
 
+export type SimplifiedNote = {
+  id: string;
+  title: string;
+  tags: Tag[];
+};
+
 const App: React.FC = () => {
   const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", []);
   const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
