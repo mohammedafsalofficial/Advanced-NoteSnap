@@ -57,6 +57,12 @@ const App: React.FC = () => {
     });
   };
 
+  const onDeleteNote = (id: string) => {
+    setNotes((prevNotes: RawNote[]) => {
+      return prevNotes.filter((note) => note.id !== id);
+    });
+  };
+
   const addTag = (tag: Tag) => {
     setTags((prevTags: Tag[]) => [...prevTags, tag]);
   };
@@ -70,7 +76,7 @@ const App: React.FC = () => {
           element={<NewNote onSubmit={onCreateNote} onAddTag={addTag} availableTags={tags} />}
         />
         <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
-          <Route index element={<Note />} />
+          <Route index element={<Note onDelete={onDeleteNote} />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
