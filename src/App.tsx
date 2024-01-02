@@ -80,10 +80,38 @@ const App: React.FC = () => {
     setTags((prevTags: Tag[]) => [...prevTags, tag]);
   };
 
+  const updateTag = (id: string, label: string) => {
+    setTags((prevTags: Tag[]) => {
+      return prevTags.map((tag: Tag) => {
+        if (tag.id === id) {
+          return { ...tag, label };
+        } else {
+          return tag;
+        }
+      });
+    });
+  };
+
+  const deleteTag = (id: string) => {
+    setTags((prevTags: Tag[]) => {
+      return prevTags.filter((tag: Tag) => tag.id !== id);
+    });
+  };
+
   return (
     <Container className="my-4">
       <Routes>
-        <Route path="/" element={<NoteList notes={notesWithTags} availableTags={tags} />} />
+        <Route
+          path="/"
+          element={
+            <NoteList
+              notes={notesWithTags}
+              availableTags={tags}
+              onUpdateTag={updateTag}
+              onDeleteTag={deleteTag}
+            />
+          }
+        />
         <Route
           path="/new"
           element={<NewNote onSubmit={onCreateNote} onAddTag={addTag} availableTags={tags} />}
