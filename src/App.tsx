@@ -8,6 +8,7 @@ import useLocalStorage from "./hooks/useLocalStorage";
 import { v4 as uuidV4 } from "uuid";
 import NoteLayout from "./components/NoteLayout";
 import Note from "./pages/Note";
+import EditNote from "./pages/EditNote";
 
 export type Tag = {
   id: string;
@@ -57,6 +58,18 @@ const App: React.FC = () => {
     });
   };
 
+  const onUpdateNote = (id: string, { tags, ...data }: NoteData) => {
+    setNotes((prevNotes: RawNote[]) => {
+      return prevNotes.map((note) => {
+        if (note.id === id) {
+          return { ...note, ...data, tagIds: tags.map((tag) => tag.id) };
+        } else {
+          return note;
+        }
+      });
+    });
+  };
+
   const onDeleteNote = (id: string) => {
     setNotes((prevNotes: RawNote[]) => {
       return prevNotes.filter((note) => note.id !== id);
@@ -77,6 +90,12 @@ const App: React.FC = () => {
         />
         <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
           <Route index element={<Note onDelete={onDeleteNote} />} />
+          <Route
+            path="edit"
+            element={
+              <EditNote onSubmit={onUpdateNote} onAddTag={addTag} availableTags={tags} />
+            }
+          />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
